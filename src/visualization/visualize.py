@@ -28,4 +28,6 @@ def plot_topic_labels(labels, label_count):
     _ = plt.figure(figsize=(15,5))
     _ = plt.title("Number of articles per topic")
     _ = plt.bar(labels, label_count)
+    _ = plt.xlabel("Topic")
+    _ = plt.ylabel("Number of articles")
     _ = plt.show()
