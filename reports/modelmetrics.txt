@@ -1,0 +1,22 @@
+Final Model:
+    Unigram bag-of-words
+
+Hyperparameters:
+    components.textcat_multilabel.threshold = 0.45
+    components.textcat_multilabel.model.ngram_size = 1
+    For more details, please see
+        "../models/2-0-spacy_model_bow_T45/model-best/config.cfg"
+
+Performance metrics:
+    Theshold = 0.45
+                          precision    recall  f1-score   support
+        Computer Science     0.8556    0.8909    0.8729       898
+                 Physics     0.9161    0.8451    0.8792       607
+             Mathematics     0.8485    0.8333    0.8409       558
+              Statistics     0.7395    0.8185    0.7770       496
+    Threshold = 0.45, min_one = True
+                          precision    recall  f1-score   support
+        Computer Science     0.8520    0.8976    0.8742       898
+                 Physics     0.9120    0.8534    0.8817       607
+             Mathematics     0.8448    0.8387    0.8417       558
+              Statistics     0.7387    0.8266    0.7802       496

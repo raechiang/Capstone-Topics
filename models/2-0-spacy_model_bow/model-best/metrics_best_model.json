@@ -1,0 +1,44 @@
+{
+  "token_acc":1.0,
+  "token_p":1.0,
+  "token_r":1.0,
+  "token_f":1.0,
+  "cats_score":0.946503026,
+  "cats_score_desc":"macro AUC",
+  "cats_micro_p":0.8561151079,
+  "cats_micro_r":0.837045721,
+  "cats_micro_f":0.846473029,
+  "cats_macro_p":0.8530851384,
+  "cats_macro_r":0.8303584548,
+  "cats_macro_f":0.8408925368,
+  "cats_macro_auc":0.946503026,
+  "cats_f_per_type":{
+    "Computer Science":{
+      "p":0.8672566372,
+      "r":0.8730512249,
+      "f":0.8701442841
+    },
+    "Physics":{
+      "p":0.9285714286,
+      "r":0.8352553542,
+      "f":0.8794449263
+    },
+    "Mathematics":{
+      "p":0.8592870544,
+      "r":0.8207885305,
+      "f":0.8395967003
+    },
+    "Statistics":{
+      "p":0.7572254335,
+      "r":0.7923387097,
+      "f":0.7743842365
+    }
+  },
+  "cats_auc_per_type":{
+    "Computer Science":0.9399851915,
+    "Physics":0.9671504957,
+    "Mathematics":0.9563910652,
+    "Statistics":0.9224853516
+  },
+  "speed":495648.3384488689
+}
