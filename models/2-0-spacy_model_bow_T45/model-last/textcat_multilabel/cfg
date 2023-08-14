@@ -1,0 +1,9 @@
+{
+  "labels":[
+    "Computer Science",
+    "Physics",
+    "Mathematics",
+    "Statistics"
+  ],
+  "threshold":0.45
+}

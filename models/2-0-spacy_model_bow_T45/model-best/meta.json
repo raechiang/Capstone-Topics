@@ -1,0 +1,70 @@
+{
+  "lang":"en",
+  "name":"pipeline",
+  "version":"0.0.0",
+  "spacy_version":">=3.5.3,<3.6.0",
+  "description":"",
+  "author":"",
+  "email":"",
+  "url":"",
+  "license":"",
+  "spacy_git_version":"512241e12",
+  "vectors":{
+    "width":0,
+    "vectors":0,
+    "keys":0,
+    "name":null,
+    "mode":"default"
+  },
+  "labels":{
+    "textcat_multilabel":[
+      "Computer Science",
+      "Physics",
+      "Mathematics",
+      "Statistics"
+    ]
+  },
+  "pipeline":[
+    "textcat_multilabel"
+  ],
+  "components":[
+    "textcat_multilabel"
+  ],
+  "disabled":[
+
+  ],
+  "performance":{
+    "cats_score":0.9458544105,
+    "cats_score_desc":"macro AUC",
+    "cats_micro_p":0.828233479,
+    "cats_micro_r":0.8489720611,
+    "cats_micro_f":0.8384745542,
+    "cats_macro_p":0.8322805497,
+    "cats_macro_r":0.8420059529,
+    "cats_macro_f":0.8362556322,
+    "cats_macro_auc":0.9458544105,
+    "cats_f_per_type":{
+      "Computer Science":{
+        "p":0.8077192982,
+        "r":0.8971161341,
+        "f":0.8500738552
+      },
+      "Physics":{
+        "p":0.9131513648,
+        "r":0.8489042676,
+        "f":0.8798565451
+      },
+      "Mathematics":{
+        "p":0.821386604,
+        "r":0.8252656434,
+        "f":0.8233215548
+      },
+      "Statistics":{
+        "p":0.7868649318,
+        "r":0.7967377666,
+        "f":0.7917705736
+      }
+    },
+    "textcat_multilabel_loss":16.0978398593
+  }
+}
