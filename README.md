@@ -10,6 +10,8 @@ Historically and in modern studies, people have observed that we have a growth r
 <p align="center">
   Scientific article growth (log publications vs year)
   <img src="/reports/figures/numpubsperyear.png" alt="Plot of segmented unrestricted growth of scientific articles from four bibliographic databases (Bornmann, Haunschild, Mutz, 2021).">
+</p>
+<p align="center">
   <b>Figure 1</b>. Plot of segmented unrestricted growth of scientific articles from four bibliographic databases (Bornmann, Haunschild, Mutz, 2021).
 </p>
 
