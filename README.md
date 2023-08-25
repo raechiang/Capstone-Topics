@@ -9,7 +9,11 @@ Historically and in modern studies, people have observed that we have a growth r
 
 <p align="center">
   Scientific article growth (log publications vs year)
+</p>
+<p align="center">
   <img src="/reports/figures/numpubsperyear.png" alt="Plot of segmented unrestricted growth of scientific articles from four bibliographic databases (Bornmann, Haunschild, Mutz, 2021).">
+</p>
+<p align="center">
   <b>Figure 1</b>. Plot of segmented unrestricted growth of scientific articles from four bibliographic databases (Bornmann, Haunschild, Mutz, 2021).
 </p>
 
@@ -17,7 +21,11 @@ Digitization and the Internet also have had an undeniable impact on increasing o
 
 <p align="center">
   Science and engineering articles published (count vs year)
+</p>
+<p align="center">
   <img src="/reports/figures/numpubsperyear_byecon.png" alt="Plot of Science and engineering articles published per year by economic group in 1996-2020 (National Science Board, 2021)."
+</p>
+<p align="center">
   <b>Figure 2</b>. Plot of science and engineering articles published per year by economic group in 1996-2020 (National Science Board, 2021).
 </p>
 
