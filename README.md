@@ -153,14 +153,8 @@ Then, I looked at the most common tokens in both "train.csv" and "test.csv". The
 <p align="center">
   <img src="/reports/figures/1-1_filtered-wc-0-cs.png" alt="Word cloud of 200 words without 30 most common global words for Computer Science.">
   <img src="/reports/figures/1-1_filtered-wc-1-ph.png" alt="Word cloud of 200 words without 30 most common global words for Physics.">
-</p>
-
-<p align="center">
   <img src="/reports/figures/1-1_filtered-wc-2-ma.png" alt="Word cloud of 200 words without 30 most common global words for Mathematics.">
   <img src="/reports/figures/1-1_filtered-wc-3-st.png" alt="Word cloud of 200 words without 30 most common global words for Statistics.">
-</p>
-
-<p align="center">
   <img src="/reports/figures/1-1_filtered-wc-4-qb.png" alt="Word cloud of 200 words without 30 most common global words for Quantitative Biology.">
   <img src="/reports/figures/1-1_filtered-wc-5-qf.png" alt="Word cloud of 200 words without 30 most common global words for Quantitative Finance.">
 </p>
