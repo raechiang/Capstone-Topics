@@ -1,7 +1,7 @@
 Multilabel Text Classification of Research Articles
 ==============================
 
-This is my first independent capstone project for Springboard.
+This is my second independent capstone project for Springboard.
 
 ## Introduction
 
@@ -23,7 +23,7 @@ Digitization and the Internet also have had an undeniable impact on increasing o
   Science and engineering articles published (count vs year)
 </p>
 <p align="center">
-  <img src="/reports/figures/numpubsperyear_byecon.png" alt="Plot of Science and engineering articles published per year by economic group in 1996-2020 (National Science Board, 2021)."
+  <img src="/reports/figures/numpubsperyear_byecon.png" alt="Plot of Science and engineering articles published per year by economic group in 1996-2020 (National Science Board, 2021).">
 </p>
 <p align="center">
   <b>Figure 2</b>. Plot of science and engineering articles published per year by economic group in 1996-2020 (National Science Board, 2021).
@@ -100,11 +100,70 @@ The dataset contained 20,972 articles, labeled with one to three of the six cate
 
 ### Data wrangling
 
-TODO
+At this step, I verified the data and sought to establish a broad understanding of the data. There were no missing values and almost no problems in the overall statistics of the values, and the inputs that would be expected to be unique were unique. There was one suspicious sample, which contained only five words total between its title and abstract, so it was dropped. The titles and abstracts were concatenated with one another, and some light text cleaning and preprocessing were conducted. Using gensim and NLTK, the texts were converted to lowercase tokens, the stop words were removed, and the resulting pruned lists of words were lemmatized. The process took about 15-20 minutes over both input files.
 
 ### Exploratory Data Analysis
 
-TODO
+First, the distributions of the labels and words were examined. The dataset was imbalanced, with Quantitative Biology and Quantitative Finance having very few samples, and Statistics also had relatively few samples compared to the remaining three. Computer Science was the biggest class.
+
+<p align="center">
+  <img src="/reports/figures/1-1_num-articles-per-topic.png" alt="Bar chart of the number of articles per topic.">
+</p>
+
+<details>
+  <summary>Articles per topic.</summary>
+
+| Topic | Count | % |
+| --- | --- | --- |
+| Computer Science | 8594 | 40.9% |
+| Physics | 6013 | 28.7% |
+| Mathematics | 5618 | 26.7% |
+| Statistics | 5206 | 24.8% |
+| Quantitative Biology | 587 | 2.8% |
+| Quantitative Finance | 249 | 1.2% |
+
+</details>
+
+There was a total of 26,267 labels, so there were 5295 more labels than there were articles. Most of the articles were tagged with only one topic.
+
+<p align="center">
+  <img src="/reports/figures/1-1_num-topics.png" alt="Bar chart of the number of articles tagged with exactly 1, 2, or 3 topics.">
+</p>
+
+<details>
+  <summary>Number of articles with exactly 1, 2, or 3 topics.</summary>
+
+| Num Topics | Count | % |
+| --- | --- | --- |
+| 1 | 15928 | 76% |
+| 2 | 4793 | 23% |
+| 3 | 251 | 1% |
+
+</details>
+
+Overall, there was an average of 166 total words per sample with their titles and abstracts combined, and the minimum length was 12 and the maximum was 467. There were slight differences in the distributions of quantity of words per topic, with Mathematics generally falling in the lowest range and Quantitative Biology having the highest range. The rest of the topics intuitively arranged themselves between these two, with topics that would be more similar to Mathematics having lower distributions and topics that would be more similar to Biology having higher distributions.
+
+<p align="center">
+  <img src="/reports/figures/1-1_distrib-words-per-article.png" alt="Histogram of the number of words per article.">
+  <img src="/reports/figures/1-1_boxplots-words-per-topic.png" alt="Box plot of number of words in a sample for each topic.">
+</p>
+
+Then, I looked at the most common tokens in both "train.csv" and "test.csv". The "train.csv" had the top ten most common tokens as model, data, method, network, system, result, problem, based, time, and show, and "test.csv" had a similar top ten results. All of the tokens seem to relate to science. When examining the top tokens per topic, the same words appeared a lot, so when constructing word clouds, I filtered the 30 most common global words so that the top 200 words per category might be more expressive of their topic.
+
+<p align="center">
+  <img src="/reports/figures/1-1_filtered-wc-0-cs.png" alt="Word cloud of 200 words without 30 most common global words for Computer Science.">
+  <img src="/reports/figures/1-1_filtered-wc-1-ph.png" alt="Word cloud of 200 words without 30 most common global words for Physics.">
+</p>
+
+<p align="center">
+  <img src="/reports/figures/1-1_filtered-wc-2-ma.png" alt="Word cloud of 200 words without 30 most common global words for Mathematics.">
+  <img src="/reports/figures/1-1_filtered-wc-3-st.png" alt="Word cloud of 200 words without 30 most common global words for Statistics.">
+</p>
+
+<p align="center">
+  <img src="/reports/figures/1-1_filtered-wc-4-qb.png" alt="Word cloud of 200 words without 30 most common global words for Quantitative Biology.">
+  <img src="/reports/figures/1-1_filtered-wc-5-qf.png" alt="Word cloud of 200 words without 30 most common global words for Quantitative Finance.">
+</p>
 
 ## Preprocessing and Modeling
 
