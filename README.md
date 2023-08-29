@@ -163,6 +163,81 @@ Then, I looked at the most common tokens in both "train.csv" and "test.csv". The
 
 [Notebook link](notebooks/2.0-rc-preprocessing-modeling.ipynb).
 
+This step can be divided into two broad problems: one dealing with single-label categorization and one dealing with multilabel categorization. The former was done with scikit-learn, using TF-IDF vectorizers and Naive Bayes classifiers on four and six categories, and the latter was done using spaCY pipelines on four categories.
+
+### Single-Label categorization
+
+The first six classifiers used a TF-IDF vectorizer that conducted some basic text preprocessing, such as stripping accents, lowercasing before tokenizing, and removing scikit-learn’s default English stop words. The minimum document frequency was two, and both unigrams and bigrams were accepted. Prediction labels were encoded to numbers 0 to 5, and the articles that were marked with multiple categories were dropped, so the resulting dataset contained 15,927 articles (76% of the original). This set was then split into 80% and 20% training and testing sets.
+
+Two Naive Bayes classifiers were used out-of-the-box to get an idea of how the models would perform, MultinomialNB and ComplementNB. The latter performed slightly better, but overall, the class imbalance was clearly problematic for both of these. The confusio matrices showed that little to no articles were predicted to belong to Statistics, Quantitative Biology, and Quantitative Finance. The feature spaces for these were very large, exceeding 130,000, so SelectKBest reduced the number of features to 20000, which turned out to work well across all four classifiers.
+
+The two strongly underrepresented classes, Quantitative Biology and Quantitative Finance, were dropped for the next part of this single-label categorization phase. Combined, these two categories only accounted for 651 articles in the single-label subset, so the remaining dataset contained 15,276 articles. The first six classifiers used the same TF-IDF vectorizer, but the final two used a slightly different one, which was selected using RandomizedSearchCV. The document frequency parameters were the only differences, with `max_df=0.2` and `min_df=5`, whereas the first version used a `max_df=1.0` and `min_df=2`.
+
+Overall, the ComplementNB classifiers tended to perform better, and filtering K-best features improved each of the models. Dropping the two underrepresented labels improved the models' recall slightly across the remaining labels, and it improved precisions slightly for the three majority labels (Computer Science, Physics, and Mathematics). Every model predicted Statistics poorly, with each ComplementNB variation having precision and recall floating around 0.85 and 0.37 for Statistics. Below is a table of these Naive Bayes classifiers' balanced accuracy and macro F1, which were chosen due to the class imbalance.
+
+| Model | Num Classes | K-best? | Balanced Accuracy | Macro F1 |
+| --- | --- | --- | --- | --- |
+| MultinomialNB | 6 | No | 0.4576 | 0.4318 |
+| ComplementNB | 6 | No | 0.5546 | 0.5778 |
+| MultinomialNB | 6 | Yes | 0.4689 | 0.4522 |
+| ComplementNB | 6 | Yes | 0.6427 | 0.6789 |
+| MultinomialNB | 4 | No | 0.6928 | 0.6687 |
+| ComplementNB | 4 | No | 0.7585 | 0.7715 |
+| MultinomialNB | 4 | Yes | 0.7450 | 0.7531 |
+| ComplementNB | 4 | Yes | 0.7914 | 0.8082 |
+
+<details>
+  <summary>Balanced Accuracy and Macro F1 table as bar graphs</summary>
+  <p align="center">
+    <img src="/reports/figures/2-0-nb_bacc.png" alt="Bar graph for balanced accuracies of Multinomial and Complement Naive Bayes classifiers for the single-label categorization problem.">
+    <img src="/reports/figures/2-0-nb_f1.png" alt="Bar graph for macro F1 of Multinomial and Complement Naive Bayes classifiers for the single-label categorization problem.">
+  </p>
+</details>
+
+The classifier that performed the best from this set was the ComplementNB on four classes using SelectKBest, and it used the second version of the TF-IDF vectorizer, with the two document frequences `max_df=0.2` and `min_df=5`. Its confusion matrix illustrates that it is pretty good at predicting the three bigger classes, but bad at predicting Statistics. The precision for all four of the classes exceeds 0.80, and the recall is 0.91 or higher for the three majority classes, but for statistics, it is only 0.39.
+
+<p align="center">
+  <img src="/reports/figures/2-0-cmatrix_ComplementNB_1_4ck.png" alt="Confusion matrix for Complement Naive Bayes classifier with Select K-Best.">
+</p>
+
+### Multilabel Categorization
+
+The multilabel dataset allows for articles that are tagged with 1-3 categories. This subset of the original 20,971 articles comprised of 20,316 articles because 655 (3%) of the articles were labeled with only Quantitative Biology, only Quantitative Finance, or exactly both of these, and thus dropped.
+
+Preprocessing the text involved the typical steps, for which spaCY's NLP "en_cor_web_sm" pipeline was used along with a bit of regular expressions to help with cleaning. For compatibility with spaCY's multilabel text categorizer, the dataset had to be split into three parts: a training set (75%), a dev set (15%), and a test set (10%), and converted into serialized forms accepted by the categorizer.
+
+Three models were created: a unigram bag-of-words model, a bigram bag-of-words model, and a convolutional neural network model. Their results were similar, but the CNN model was the slowest to train, and the unigram model was the fastest to train, and the unigram model performed generally better than the bigram model. The table below displays the three spaCY models' evaluations with a scorer threshold of 0.5 and no rules on the number of categories to return. Slight variations to the parameters of the unigram model were tested, but they did not yield different enough results or valuable enough improvements. The only model that attained better scores had a slower learning rate, causing the time to train to increase, but because the improvement was very small, the change was deemed not worth the extra time.
+
+<p align="center">
+  <img src="/reports/figures/2-0-spacy_models_prf_s0.5.png" alt="Three spaCY models' precision, recall, and f1-score for each of the four categories, using a scorer threshold of 0.5.">
+</p>
+
+When the models predict, they return scores for each category. To be considered as part of a category, its corresponding score has to exceed a specific threshold value. Adjusting this threshold improved the unigram bag-of-words model in terms of recall, and mostly it impacted the Statistics predictions. A threshold of 0.45 to 0.50 would attain a decent range of 0.74 to 0.93 precision and recall across every subject. The exact threshold to use would depend on the application, with a more lenient (lower) threshold value increasing the recall at the cost of precision and with a less lenient (higher) threshold value increasing the precision at the cost of recall. Thus, this is also a balancing act because heavily favoring one over the other would likely not be desired in any application of this article categorization problem. Even though an empty search result or recommendation section could be undesirable, returning too many incorrect articles could reduce users' trust in the system.
+
+One issue that this simple of a scorer ran into is that some articles were too uncertain to pass as any category, given any reasonable threshold value--for example, if the scores were all under 0.30, then any reasonable threshold value would probably return no category (or a prediction of 0000). However, every article should have at least one category. Thus, the scorer was given an extra step: if no category exceeded the threshold value, then the highest scored category would be returned true. Doing this also increased the recall of the model, but the precision was slightly lower.
+
+The classification report below is for the unigram bag-of-words model, using a threshold of 0.45, and requiring at least the one highest label to be returned.
+
+| | Precision | Recall | F1-score |
+| --- | --- | --- | --- |
+| *Computer Science* | 0.85 | 0.90 | 0.87 |
+| *Physics* | 0.91 | 0.85 | 0.88 |
+| *Mathematics* | 0.84 | 0.84 | 0.84 |
+| *Statistics* | 0.74 | 0.83 | 0.78 |
+| | | | |
+| *Micro Avg* | 0.84 | 0.86 | 0.85 |
+| *Macro Avg* | 0.84 | 0.85 | 0.84 |
+| *Weighted Avg* | 0.84 | 0.86 | 0.85 |
+| *Samples Avg* | 0.88 | 0.89 | 0.86 |
+
+Every spaCY model performed weakest in predicting Statistics, but it is still a big improvement over the Naive Bayes classifiers. A precision and recall of 0.74 and 0.83 are not too bad, given the class imbalance. Below is the confusion matrix for the same unigram bag-of-words model. The model tended to be the most successful with articles that should have only one label. It tended to label more articles as Computer Science than was true, which can be seen in the darker squares along the predicted Computer Science columns not lying along the diagonal, but this might be expected because Computer Science had the highest representation in the dataset. In particular, Statistics and Physics had some fuzziness with Computer Science. Glancing over some problem cases revealed that some of the excessive labeling of Computer Science articles may also be because terms relating to software, technology, and computers tend to show up in all kinds of articles. I speculate that the tools and approaches may have been mentioned in the abstract; advanced computing technology is likely instrumental in furthering our research. Also, for Statistics, recall that the word clouds from the exploratory data analysis section revealed that Computer Science and Statistics seemed to have a lot of overlapping words.
+
+<p align="center">
+  <img src="/reports/figures/2-0-cmatrix_ubow.png" alt="Confusion matrix for fourteen label combinations for the unigram bag-of-words model using a scorer threshold of 0.45 and requiring at least one category returned as true.">
+</p>
+
+### Comparisons and Evaluations
+
 TODO
 
 ## Conclusion and Future Work
