@@ -236,6 +236,21 @@ Every spaCY model performed weakest in predicting Statistics, but it is still a 
   <img src="/reports/figures/2-0-cmatrix_ubow.png" alt="Confusion matrix for fourteen label combinations for the unigram bag-of-words model using a scorer threshold of 0.45 and requiring at least one category returned as true.">
 </p>
 
+Using 100 of the samples from the test set, we can examine some of the tokens that the model found important on average per category with mean SHAP values. The number of features is high, and the subjects of the articles were probably very broad, so it cannot represent every article, but it is still interesting to see how the model seemed to value certain tokens and the strengths that it attributed to each. The top words, seen below, seem relevant to each category, but each category seems a bit different from the rest, broadly speaking. In the top ten, Computer Science has goal-oriented tokens, physics has subject domain tokens, mathematics has a lot of tool-related tokens, and statistics has technique-related tokens. It also seems to me that for the most part, the model found that the actual topics within the categories seemed less important, whereas the types of problems that researchers for each category tended to pursue were more important when the model was trying to determine which category the article belonged to. The Physics category does not support this observation as well as the others because many of its top tokens appear to be the specific domains that were probably covered in each article. This leads me to think that author information, citations, and references could also aid in categorization, and especially would be useful for search engines or recommendation systems.
+
+| Computer Science | Physics | Mathematics | Statistics |
+| --- | --- | --- | --- |
+| Reachability | Mechanic | Prove | Bayesian |
+| Bit | Calculation | Operator | Sequential |
+| Inability | Sky | Sharp | Statistical |
+| Improvement | Symmetry | Article | Recommender |
+| Communication | Detector | Homotopy | Clustering |
+| Robot | Molecular | Theorem | Approximate |
+| Attempt | Galaxy | Perturb | Trial |
+| Segmentation | Hydrodynamic | Mathematical | Parametric |
+| Principled | Spacecraft | Category | Learning |
+| Validate | Removal | Conic | Explanation |
+
 ### Comparisons and Evaluations
 
 In terms of the preprocessing steps, scikit-learn's TF-IDF vectorizer was the fastest, taking only about five seconds to preprocess the documents, whereas spaCY's pipeline took three to four minutes. That being said, spaCY's pipeline was more sophisticated in that it also considered word meanings and usages, though the term frequency and document infrequency were not considered at this point of the process. However, more work or different features can be extracted with spaCY, so practice of it may be useful for wider applications. Neither of these methods was as slow as using NLTK and gensim, which took 10 to 15 minutes to preprocess the text.
